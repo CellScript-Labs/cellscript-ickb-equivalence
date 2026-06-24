@@ -18,6 +18,49 @@ That gives the repository a stricter shape than an ordinary benchmark suite:
 
 Compile success alone is not enough here. A claim row needs executable evidence, original-side evidence, generated-side evidence, matching status, hashes, cycle and transaction measurements, and a clear branch-level manifest entry.
 
+## External Audit Path
+
+This benchmark line grew out of a public Nervos Talk discussion with phroi about using iCKB as a realistic CellScript maturity benchmark. The useful starting point was phroi's cleanup of iCKB artefacts around DAO, header, witness, deployment, replay, and test-suite details:
+
+- [CellScript - A DSL for Cell-Based Contracts, post 18](https://talk.nervos.org/t/cellscript-a-dsl-for-cell-based-contracts/10193/18)
+- [iCKB Contracts Revisited: Old Code, New Audit, post 3](https://talk.nervos.org/t/ickb-contracts-revisited-old-code-new-audit/10225/3)
+
+The review flow is:
+
+```mermaid
+flowchart TD
+    A["Public discussion with phroi"] --> B["Upstream iCKB artefacts clarified"]
+    B --> C["Select an iCKB branch or scenario"]
+    C --> D["Normalise semantic inputs, capacities, deps, headers, witnesses, and output data"]
+    D --> E1["Original iCKB binary"]
+    D --> E2["CellScript model and generated artefact"]
+    E1 --> F["Run the paired scenario in CKB VM or ckb-testtool"]
+    E2 --> F
+    F --> G{"Do pass and fail statuses align?"}
+    G -- "yes" --> H["Record hashes, exit codes, cycles, tx size, capacity, fees, and reject mode"]
+    G -- "no" --> I["Treat as a model gap or out-of-scope row"]
+    H --> J["Commit row evidence in matrix.json"]
+    J --> K["Map the branch in claim_manifest.json"]
+    K --> L["External auditor spot-checks hashes and reruns the gates"]
+```
+
+For an external auditor, the intended review is:
+
+1. Read the public discussion and the carried reports under `docs/` to understand the claim boundary.
+2. Inspect `ickb_diff/claim_manifest.json` and confirm that every claimed branch maps to committed differential rows, hardening thresholds, or explicit out-of-scope notes.
+3. Inspect `ickb_diff/matrix.json` and check that each selected equivalence row contains original-side execution, CellScript-side execution, matching pass/fail status, hashes, cycle counts, transaction size, occupied capacity, fees, and named reject modes where applicable.
+4. Recompute or spot-check the hashes for fixtures, original binaries, generated artefacts, and transaction contexts instead of trusting the JSON by inspection.
+5. Confirm that paired scenarios keep semantic inputs, capacities, output data, cell deps, header deps, and witnesses aligned, with only the script-under-test code cell or hash differing where the comparison requires it.
+6. Run the manifest checker and the Rust differential test from a CellScript checkout with this repository mounted at `tests/benchmarks`.
+
+```bash
+cargo run --locked -p cellscript --bin cellc -- \
+  verify-ckb-fixtures tests/benchmarks/ickb_diff/claim_manifest.json --json
+cargo test --locked -p cellscript --test ickb_diff
+```
+
+The forum discussion is useful provenance for why iCKB was chosen and which upstream artefacts made the comparison practical. It is not a substitute for local verification, and it should not be read as phroi certifying the CellScript evidence.
+
 ## Repository Map
 
 | Path | Purpose |
