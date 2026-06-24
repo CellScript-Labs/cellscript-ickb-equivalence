@@ -4,6 +4,20 @@ This repository contains the iCKB equivalence evidence used by CellScript.
 
 It is not a marketing benchmark. It is a set of executable specs, fixtures, original binary references, and reports for checking whether CellScript models the intended iCKB behaviour closely enough to support a production-equivalence claim.
 
+## How To Read This Repository
+
+The evidence is organised around behaviour, not speed. A useful row says that an original iCKB binary and a generated CellScript artefact were run against the same normalised CKB VM/testtool scenario, then produced matching accept/reject status with named reject reasons where relevant.
+
+That gives the repository a stricter shape than an ordinary benchmark suite:
+
+- `ickb_specs/` describes the CellScript model surface.
+- positive and negative fixtures make accepted and rejected behaviours explicit.
+- `ickb_diff/matrix.json` records row-level differential evidence.
+- `ickb_diff/claim_manifest.json` declares which rows are allowed to support a production-equivalence claim.
+- carried reports explain what is proven, what is supporting evidence, and what remains outside the claim boundary.
+
+Compile success alone is not enough here. A claim row needs executable evidence, original-side evidence, generated-side evidence, matching status, hashes, cycle and transaction measurements, and a clear branch-level manifest entry.
+
 ## Repository Map
 
 | Path | Purpose |
