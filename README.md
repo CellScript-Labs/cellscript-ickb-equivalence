@@ -4,13 +4,6 @@ This repository contains the iCKB equivalence evidence used by CellScript.
 
 It is not a marketing benchmark. It is a set of executable specs, fixtures, original binary references, and reports for checking whether CellScript models the intended iCKB behaviour closely enough to support a production-equivalence claim.
 
-## Who Should Read This
-
-- CKB developers comparing CellScript output against known iCKB behaviour.
-- Auditors reviewing positive and negative lock-spend evidence.
-- CellScript maintainers extending the compiler, fixture verifier, or benchmark surface.
-- Protocol teams who want an example of how to package equivalence evidence instead of only prose claims.
-
 ## Repository Map
 
 | Path | Purpose |
