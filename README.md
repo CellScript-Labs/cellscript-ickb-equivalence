@@ -6,6 +6,25 @@ It is not a marketing benchmark. It is a set of executable specs, fixtures, orig
 
 ## How To Read This Repository
 
+The 0.31 cost-backend refresh was measured on September 22, 2026. The matrix
+pins the compiler implementation at
+[`fe5bc5cd`](https://github.com/CellScript-Labs/CellScript/commit/fe5bc5cdeb9db70d9f9aacdbb657746a9b8f81bc).
+Its 187 execution records retain the original Rust-side evidence and the same
+accept/reject results. Measured CellScript transaction-success cycles do not
+increase. Generated artifact hashes, transaction identities and cycle counts
+were refreshed from execution.
+
+The wrong-xUDT-args receipt transaction now reports xUDT exit -52 before the
+CellScript exit 48. The pinned verifier orders Type groups by Script hash; the
+new ELF changes that order. The parent regression test replays both groups and
+requires their original exit codes, with measured cycles of 18,097 and 8,706
+respectively. This refresh does not claim that every transaction keeps the
+same first reported error after recompilation.
+
+Zero cycles on a rejected transaction in this legacy matrix remain unavailable
+measurements. The parent's cost-report v2 separately measures selected-group
+nonzero exits and enforces rejection-cycle budgets.
+
 The evidence is organised around behaviour, not speed. A useful row says that an original iCKB binary and a generated CellScript artefact were run against the same normalised CKB VM/testtool scenario, then produced matching accept/reject status with named reject reasons where relevant.
 
 That gives the repository a stricter shape than an ordinary benchmark suite:
