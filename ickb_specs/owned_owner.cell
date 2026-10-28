@@ -95,7 +95,7 @@ lock owned_unlock(
         let input = source::group_input(0)
         let owner_input = source::group_input(1)
 
-        ckb::require_cell_lock_args_hash(input, expected_owner_args_hash)
+        ckb::require_cell_lock_args32(input, expected_owner_args_hash.0)
         ckb::require_input_out_point(input, expected_owner_tx_hash, owned.owned_index)
         ckb::require_metapoint_relative(owner_input, input, owner_cell.owner_relative_distance)
         require dao::has_dao_type(input), "owned input must be DAO"

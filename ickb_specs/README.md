@@ -164,8 +164,8 @@ git diff --check
   requirement helpers, generic SourceView Script code_hash/hash_type helpers,
   and
   `ckb::require_cell_lock_args_empty` / `ckb::require_cell_type_args_empty` plus
-  `ckb::require_cell_lock_args_hash` /
-  `ckb::require_cell_type_args_hash` SourceView helpers, plus 0.18 exact
+  `ckb::require_cell_lock_args32` /
+  `ckb::require_cell_type_args32` SourceView helpers, plus 0.18 exact
   `Script` construction/matching for fixture-bound expected scripts. Generic
   lock/type group scans remain outside this benchmark spec.
 - cross-cell iCKB mint/redeem accounting across receipts, deposits, DAO rates,
