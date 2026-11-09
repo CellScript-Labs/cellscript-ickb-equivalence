@@ -6,6 +6,16 @@ It is not a marketing benchmark. It is a set of executable specs, fixtures, orig
 
 ## How To Read This Repository
 
+The active `ickb_specs/*.cell` sources use the Edition 2027 authoring-v3
+grammar for CellScript's `0.36` development line: explicit statement
+terminators, list commas, `new` value construction and `::<...>` calls.
+Boolean Lock entries return an explicit success value after their guards.
+The parent compiler's `ickb_benchmark` target compiles all three specs and
+checks the existing entry/helper inventory (5 tests). This source migration
+does not regenerate the historical transaction matrix, original binaries,
+cycle reports or production-equivalence evidence below. Those records retain
+their stated compiler revision and evidence limits.
+
 The 0.31 cost-backend refresh was measured on September 22, 2026. The matrix
 pins the compiler implementation at
 [`fe5bc5cd`](https://github.com/CellScript-Labs/CellScript/commit/fe5bc5cdeb9db70d9f9aacdbb657746a9b8f81bc).
