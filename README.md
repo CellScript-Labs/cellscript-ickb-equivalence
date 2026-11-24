@@ -6,10 +6,10 @@ It is not a marketing benchmark. It is a set of executable specs, fixtures, orig
 
 ## How To Read This Repository
 
-The active `ickb_specs/*.cell` sources use the Edition 2027 authoring-v5
+The active `ickb_specs/*.cell` sources use the Edition 2027 authoring-v6
 grammar for CellScript's `0.36` development line: explicit statement
 terminators, list commas, `new` value construction and `::<...>` calls.
-Aggregate assertions inherit the declared invariant scope.
+Bare aggregate targets inherit the invariant scope and explicit views agree with it.
 Boolean Lock entries return an explicit success value after their guards.
 The parent compiler's `ickb_benchmark` target compiles all three specs and
 checks the existing entry/helper inventory (5 tests). This source migration
