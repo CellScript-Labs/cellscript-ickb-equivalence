@@ -52,7 +52,7 @@ invariant xudt_group_mint_delta {
     scope: group;
     reads: group_inputs<IckbToken>.amount,
     group_outputs<IckbToken>.amount;
-    assert_delta(group_outputs<IckbToken>.amount, minted, scope = group);
+    assert_delta(group_outputs<IckbToken>.amount, minted);
 }
 
 invariant xudt_group_burn_delta {
@@ -60,7 +60,7 @@ invariant xudt_group_burn_delta {
     scope: group;
     reads: group_inputs<IckbToken>.amount,
     group_outputs<IckbToken>.amount;
-    assert_delta(group_inputs<IckbToken>.amount, burned, scope = group);
+    assert_delta(group_inputs<IckbToken>.amount, burned);
 }
 
 receipt WithdrawalRequest has store, create, consume {
