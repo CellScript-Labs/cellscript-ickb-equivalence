@@ -17,8 +17,9 @@ resource OwnerCell has store, create, consume {
     owner_relative_distance: i32,
 }
 
-action mint_owned_owner(request_epoch: u64, maturity_epoch: u64, owner: Address, owned_index: u64, owner_index: u64,
-expected_owned_type_hash: Hash, owner_relative_distance: i32) -> (owned: OwnedWithdrawal, owner_cell: OwnerCell) {
+action mint_owned_owner(witness request_epoch: u64, witness maturity_epoch: u64, witness owner: Address,
+witness owned_index: u64, witness owner_index: u64, witness expected_owned_type_hash: Hash, witness owner_relative_distance: i32,
+output owned: OwnedWithdrawal, output owner_cell: OwnerCell) {
     ckb::require_current_script_args_empty();
     let role = ckb::current_role();
     let owner_output_index = ckb::cell_output_index(source::output(owner_index));
@@ -52,7 +53,7 @@ expected_owned_type_hash: Hash, owner_relative_distance: i32) -> (owned: OwnedWi
     } with_lock(owner)
 }
 
-action melt_owned_owner(owned: OwnedWithdrawal, owner_cell: OwnerCell, claimed_owner: Address) {
+action melt_owned_owner(input owned: OwnedWithdrawal, input owner_cell: OwnerCell, witness claimed_owner: Address) {
     ckb::require_current_script_args_empty();
     require owner_cell.owner == claimed_owner,
     "wrong owner";
@@ -66,8 +67,8 @@ action melt_owned_owner(owned: OwnedWithdrawal, owner_cell: OwnerCell, claimed_o
     consume owner_cell;
 }
 
-lock owned_unlock(owned: protected OwnedWithdrawal, owner_cell: protected OwnerCell, expected_owner_args_hash: lock_args Hash,
-expected_owned_type_hash: witness Hash, expected_owner_tx_hash: witness Hash) -> bool {
+lock owned_unlock(protected owned: OwnedWithdrawal, protected owner_cell: OwnerCell, lock_args expected_owner_args_hash: Hash,
+witness expected_owned_type_hash: Hash, witness expected_owner_tx_hash: Hash) -> bool {
     ckb::require_current_script_args_empty();
     let input = source::group_input(0);
     let owner_input = source::group_input(1);

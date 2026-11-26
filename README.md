@@ -6,9 +6,10 @@ It is not a marketing benchmark. It is a set of executable specs, fixtures, orig
 
 ## How To Read This Repository
 
-The active `ickb_specs/*.cell` sources use the Edition 2027 authoring-v6
-grammar for CellScript's `0.36` development line: explicit statement
-terminators, list commas, `new` value construction and `::<...>` calls.
+The active `ickb_specs/*.cell` sources use the Edition 2027 authoring-v9
+grammar for CellScript's `0.36` development line: explicit entry-source
+prefixes, inline named Cell output ports, statement terminators, list commas,
+`new` value construction and `::<...>` calls.
 Bare aggregate targets inherit the invariant scope and explicit views agree with it.
 Boolean Lock entries return an explicit success value after their guards.
 The parent compiler's `ickb_benchmark` target compiles all three specs and
@@ -16,6 +17,18 @@ checks the existing entry/helper inventory (5 tests). This source migration
 does not regenerate the historical transaction matrix, original binaries,
 cycle reports or production-equivalence evidence below. Those records retain
 their stated compiler revision and evidence limits.
+
+The signature migration used the reference compiler's lossless parser,
+exhaustive semantic AST comparison after explicit source-role elaboration,
+and migration/formatter idempotence. All three specifications retain identical
+assembly before/after signature migration under that reference compiler.
+The current compiler retains all 77 action/Lock parameter layouts, with source
+provenance made explicit. Limit-order and owned-owner assembly also remain
+byte-identical across compiler versions. The iCKB logic's 48-byte token model
+does not satisfy the raw-u128 helper's exact 16-byte domain: the current compiler
+does not insert that helper as a conservation prelude or claim its evidence.
+Its source group aggregates retain their runtime-required boundary. This is
+distinct from the signature migration and supplies no new equivalence claim.
 
 The 0.31 cost-backend refresh was measured on September 22, 2026. The matrix
 pins the compiler implementation at

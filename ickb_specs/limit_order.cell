@@ -18,9 +18,10 @@ resource OrderMaster has store, create, consume {
     owner: Address,
 }
 
-action mint_order(ckb_amount: u128, udt_amount: u128, udt_type_hash: Hash, ckb_to_udt_ckb_mul: u128,
-ckb_to_udt_udt_mul: u128, udt_to_ckb_ckb_mul: u128, udt_to_ckb_udt_mul: u128, ckb_min_match: u128, order_index: u64,
-master_index: u64, master_relative_distance: i32, owner: Address) -> (order: LimitOrder, master: OrderMaster) {
+action mint_order(witness ckb_amount: u128, witness udt_amount: u128, witness udt_type_hash: Hash, witness ckb_to_udt_ckb_mul: u128,
+witness ckb_to_udt_udt_mul: u128, witness udt_to_ckb_ckb_mul: u128, witness udt_to_ckb_udt_mul: u128,
+witness ckb_min_match: u128, witness order_index: u64, witness master_index: u64, witness master_relative_distance: i32,
+witness owner: Address, output order: LimitOrder, output master: OrderMaster) {
     ckb::require_current_script_args_empty();
     require valid_ratio(ckb_to_udt_ckb_mul, ckb_to_udt_udt_mul),
     "bad ckb to udt";
@@ -53,7 +54,8 @@ master_index: u64, master_relative_distance: i32, owner: Address) -> (order: Lim
     } with_lock(owner)
 }
 
-action fulfill_ckb_to_udt(order: LimitOrder, new_ckb_amount: u128, new_udt_amount: u128, owner: Address) -> updated_order: LimitOrder {
+action fulfill_ckb_to_udt(input order: LimitOrder, witness new_ckb_amount: u128, witness new_udt_amount: u128,
+witness owner: Address, output updated_order: LimitOrder) {
     ckb::require_current_script_args_empty();
     let role = ckb::current_role();
     let order_capacity = ckb::cell_capacity(source::group_input(0));
@@ -88,7 +90,8 @@ action fulfill_ckb_to_udt(order: LimitOrder, new_ckb_amount: u128, new_udt_amoun
     } with_lock(owner)
 }
 
-action fulfill_udt_to_ckb(order: LimitOrder, new_ckb_amount: u128, new_udt_amount: u128, owner: Address) -> updated_order: LimitOrder {
+action fulfill_udt_to_ckb(input order: LimitOrder, witness new_ckb_amount: u128, witness new_udt_amount: u128,
+witness owner: Address, output updated_order: LimitOrder) {
     ckb::require_current_script_args_empty();
     let role = ckb::current_role();
     let order_capacity = ckb::cell_capacity(source::group_input(0));
@@ -123,7 +126,7 @@ action fulfill_udt_to_ckb(order: LimitOrder, new_ckb_amount: u128, new_udt_amoun
     } with_lock(owner)
 }
 
-action cancel_order(order: LimitOrder, master: OrderMaster, owner: Address) {
+action cancel_order(input order: LimitOrder, input master: OrderMaster, witness owner: Address) {
     ckb::require_current_script_args_empty();
     require (order.owner == owner),
     "wrong owner";
@@ -137,7 +140,7 @@ fn valid_ratio(ckb_mul: u128, udt_mul: u128) -> bool {
     ((ckb_mul == 0) && (udt_mul == 0)) || ((ckb_mul > 0) && (udt_mul > 0))
 }
 
-lock order_owner(order: protected LimitOrder, claimed_owner: witness Address) -> bool {
+lock order_owner(protected order: LimitOrder, witness claimed_owner: Address) -> bool {
     ckb::require_current_script_args_empty();
     require (ckb::current_role() == 1);
     require (order.owner == claimed_owner);

@@ -72,8 +72,9 @@ receipt WithdrawalRequest has store, create, consume {
     owner: Address,
 }
 
-action deposit_phase_1(deposit_amount: u128, deposit_quantity: u128, occupied_capacity: u128, deposit_accumulated_rate: u128,
-logic_hash: Hash, depositor: Address) -> (deposit: DaoDeposit, receipt: IckbReceipt) {
+action deposit_phase_1(witness deposit_amount: u128, witness deposit_quantity: u128, witness occupied_capacity: u128,
+witness deposit_accumulated_rate: u128, witness logic_hash: Hash, witness depositor: Address, output deposit: DaoDeposit,
+output receipt: IckbReceipt) {
     ckb::require_current_script_args_empty();
     // TODO(ickb-benchmark): exact iCKB output deposit/receipt pairing must stay
     // in benchmark fixtures until CellScript has generic aggregate lowering.
@@ -99,8 +100,9 @@ logic_hash: Hash, depositor: Address) -> (deposit: DaoDeposit, receipt: IckbRece
     } with_lock(depositor)
 }
 
-action mint_from_receipt(receipt: IckbReceipt, existing_tokens: IckbToken, expected_xudt_args_hash: Hash,
-expected_xudt_code_hash: Hash, expected_xudt_hash_type: u64, owner: Address) -> token: IckbToken {
+action mint_from_receipt(input receipt: IckbReceipt, input existing_tokens: IckbToken, witness expected_xudt_args_hash: Hash,
+witness expected_xudt_code_hash: Hash, witness expected_xudt_hash_type: u64, witness owner: Address,
+output token: IckbToken) {
     ckb::require_current_script_args_empty();
     // TODO(ickb-benchmark): output receipt/deposit pairing is intentionally not
     // a core dao::* helper; model it in test fixtures until generic aggregate
@@ -148,7 +150,7 @@ expected_xudt_code_hash: Hash, expected_xudt_hash_type: u64, owner: Address) -> 
     } with_lock(owner)
 }
 
-action transfer_ickb(token: IckbToken, to: Address) -> next_token: IckbToken {
+action transfer_ickb(input token: IckbToken, witness to: Address, output next_token: IckbToken) {
     ckb::require_current_script_args_empty();
     require token.amount > ZERO_U128,
     "empty transfer";
@@ -159,8 +161,8 @@ action transfer_ickb(token: IckbToken, to: Address) -> next_token: IckbToken {
     } with_lock(to)
 }
 
-action request_withdrawal(token: IckbToken, deposit: DaoDeposit, request_epoch: u64, maturity_epoch: u64,
-owner: Address) -> request: WithdrawalRequest {
+action request_withdrawal(input token: IckbToken, input deposit: DaoDeposit, witness request_epoch: u64,
+witness maturity_epoch: u64, witness owner: Address, output request: WithdrawalRequest) {
     ckb::require_current_script_args_empty();
     let input = source::group_input(0);
     let header = source::header_dep(0);
@@ -195,7 +197,7 @@ owner: Address) -> request: WithdrawalRequest {
     } with_lock(owner)
 }
 
-action redeem_mature(request: WithdrawalRequest, current_epoch: u64, owner: Address) {
+action redeem_mature(input request: WithdrawalRequest, witness current_epoch: u64, witness owner: Address) {
     ckb::require_current_script_args_empty();
     let input = source::group_input(0);
     require dao::has_dao_type(input),
@@ -225,7 +227,7 @@ fn discounted_ickb_value(unoccupied_capacity: u128, accumulated_rate: u128) -> u
     return raw - oversize_fee;
 }
 
-lock receipt_owner(receipt: protected IckbReceipt, claimed_owner: witness Address) -> bool {
+lock receipt_owner(protected receipt: IckbReceipt, witness claimed_owner: Address) -> bool {
     ckb::require_current_script_args_empty();
     require ckb::current_role() == CURRENT_ROLE_LOCK;
     require receipt.deposit_quantity > ZERO_U128;
@@ -233,7 +235,7 @@ lock receipt_owner(receipt: protected IckbReceipt, claimed_owner: witness Addres
     true
 }
 
-lock withdrawal_owner(request: protected WithdrawalRequest, claimed_owner: witness Address) -> bool {
+lock withdrawal_owner(protected request: WithdrawalRequest, witness claimed_owner: Address) -> bool {
     ckb::require_current_script_args_empty();
     require ckb::current_role() == CURRENT_ROLE_LOCK;
     require request.owner == claimed_owner;
